@@ -1,8 +1,8 @@
 package main
 
 import (
-	"net/http"
 	"github.com/yobert/pkunk"
+	"net/http"
 )
 
 func singleFile(url string, path string) {
@@ -17,7 +17,14 @@ func main() {
 	pk.Cache("./cache/")
 	pk.Resources("./js/", "./css/", "../../js/")
 
-	//http.HandleFunc("/", pk.RootHandler)
+	base, err := pk.NewPack("base", "pkunk/bootstrap.js", "home.js", "test.js")
+	if err != nil {
+		panic(err)
+	}
+
+	pk.Include(base)
+
+	pk.JsonURL("/", nil)
 
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./images/"))))
 	singleFile("/robots.txt", "./robots.txt")
