@@ -10,7 +10,7 @@ var pageSource = `<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">{{range .CSS}}
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">{{range .CSS}}
 		<link rel="stylesheet" href="{{.}}"></link>{{end}}{{range .JS}}
 		<script src="{{.}}"></script>{{end}}
 		<script>

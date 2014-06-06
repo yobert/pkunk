@@ -17,12 +17,25 @@ func main() {
 	pk.Cache("./cache/")
 	pk.Resources("./js/", "./css/", "../../js/")
 
-	base, err := pk.NewPack("base", "pkunk/bootstrap.js", "home.js", "test.js")
+	base, err := pk.NewPack("base",
+		"pkunk/bootstrap.js",
+		"home.js",
+		"test.js",
+		"layout.js",
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	css, err := pk.NewPack("base-css",
+		"screen.css",
+	)
 	if err != nil {
 		panic(err)
 	}
 
 	pk.Include(base)
+	pk.Include(css)
 
 	pk.JsonURL("/", nil)
 
