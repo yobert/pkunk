@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/yobert/pkunk"
 	"net/http"
+	"fmt"
 )
 
 func singleFile(url string, path string) {
@@ -42,5 +43,6 @@ func main() {
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./images/"))))
 	singleFile("/robots.txt", "./robots.txt")
 
+	fmt.Println("serving on :8080")
 	http.ListenAndServe(":8080", nil)
 }
