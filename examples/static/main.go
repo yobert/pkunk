@@ -1,9 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"github.com/yobert/pkunk"
 	"net/http"
-	"fmt"
 )
 
 func singleFile(url string, path string) {
