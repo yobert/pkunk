@@ -1,3 +1,4 @@
 .*.swp
 /examples/static/cache
+/examples/static/static
 

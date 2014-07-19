@@ -9,7 +9,7 @@
 		var path = current_path();
 		var u = url_handlers[path];
 		if (!u)
-			throw ('no url_handler for path: ' + path);
+			throw ('no url_handler for path: "' + path + '"');
 
 		u.handler();
 	}
