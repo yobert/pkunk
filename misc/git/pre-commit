@@ -4,22 +4,22 @@
 
 fail=""
 
-jsfiles=$(git diff --cached --name-only --diff-filter=ACM | grep '.js$')
-if [ -n "$jsfiles" ]
-then
-	jsfail=$(jsfmt -l $jsfiles)
-	if [ -n "$jsfail" ]
-	then
-		fail="yeah"
-		echo >&2 "JS files must be formatted with jsfmt.  Please run:"
-		for js in $jsfail; do
-			echo >&2 "   jsfmt -w $PWD/$js"
-		done
-		echo >&2
-	fi
-fi
+#jsfiles=$(git diff --cached --name-only --diff-filter=ACM | grep '^js/pkunk/\.js$')
+#if [ -n "$jsfiles" ]
+#then
+#	jsfail=$(jsfmt -l $jsfiles)
+#	if [ -n "$jsfail" ]
+#	then
+#		fail="yeah"
+#		echo >&2 "JS files must be formatted with jsfmt.  Please run:"
+#		for js in $jsfail; do
+#			echo >&2 "   jsfmt -w $PWD/$js"
+#		done
+#		echo >&2
+#	fi
+#fi
 
-gofiles=$(git diff --cached --name-only --diff-filter=ACM | grep '.go$')
+gofiles=$(git diff --cached --name-only --diff-filter=ACM | grep '\.go$')
 if [ -n "$gofiles" ]
 then
 	gofail=$(gofmt -l $gofiles)

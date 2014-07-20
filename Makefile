@@ -2,5 +2,5 @@
 
 fmt:
 	gofmt -w .
-	jsfmt -w .
+#	jsfmt -w js/pkunk/
 
