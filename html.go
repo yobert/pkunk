@@ -17,7 +17,7 @@ var pageSource = `<!DOCTYPE html>
 			var bootstrap_data = {{.Data}};
 		</script>
 	</head>
-	<body onload="bootstrap();">
+	<body onload="main();">
 		<noscript>
 			<h3>JavaScript Required</h3>
 			Sorry, our site won't work without JavaScript.  Please enable it and try again!
@@ -45,6 +45,11 @@ func (pk *Env) bootstrap(w http.ResponseWriter, r *http.Request) {
 	page.Data = nil
 
 	for _, pack := range pk.Packs {
+		err := pack.Repack()
+		if err != nil {
+			panic(err)
+		}
+
 		if pack.Type == PACK_CSS {
 			page.CSS = append(page.CSS, pack.PackedUrl)
 		} else if pack.Type == PACK_JS {

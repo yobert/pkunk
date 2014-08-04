@@ -2,6 +2,7 @@ package pkunk
 
 import (
 	"net/http"
+	"log"
 )
 
 type Env struct {
@@ -50,6 +51,7 @@ func (pk *Env) Resources(resources ...string) {
 func (pk *Env) JsonURL(url string, handler JsonHandlerFunc) {
 	// ATM ignore handler
 	pk.ServeMux.HandleFunc(url, func(w http.ResponseWriter, r *http.Request) {
+		log.Println(r.URL.Path)
 		pk.bootstrap(w, r)
 	})
 }

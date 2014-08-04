@@ -22,19 +22,35 @@ type Pack struct {
 	PackedUrl  string
 	PackedPath string
 	Type       packType
+
+	Title	string
+	Paths	[]string
+
+	pk *Env
 }
 
 func (pk *Env) NewPack(title string, paths ...string) (*Pack, error) {
 	p := Pack{}
 
+	p.Title = title
+	p.Paths = paths
+	p.pk = pk
+
+	err := p.Repack()
+
+	return &p, err
+}
+
+func (p *Pack) Repack() error {
+
 	var out bytes.Buffer
 	var size int64
 	var ptype packType = -1
 
-	for _, rawpath := range paths {
+	for _, rawpath := range p.Paths {
 		// search for path
 		path := rawpath
-		for _, r := range pk.resourcePaths {
+		for _, r := range p.pk.resourcePaths {
 			f, e := os.Open(r + rawpath)
 			if e != nil {
 				continue
@@ -50,23 +66,23 @@ func (pk *Env) NewPack(title string, paths ...string) (*Pack, error) {
 		} else if strings.HasSuffix(path, ".js") {
 			pt = PACK_JS
 		} else {
-			return nil, errors.New("Bad extension in pack file \"" + path + "\"")
+			return errors.New("Bad extension in pack file \"" + path + "\"")
 		}
 
 		if ptype != -1 && ptype != pt {
-			return nil, errors.New("Bad pack file list: Cannot mix types")
+			return errors.New("Bad pack file list: Cannot mix types")
 		}
 		ptype = pt
 
 		in, err := os.Open(path)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		defer in.Close()
 
 		count, err := io.Copy(&out, in)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		size += count
 	}
@@ -80,30 +96,30 @@ func (pk *Env) NewPack(title string, paths ...string) (*Pack, error) {
 	} else if ptype == PACK_JS {
 		sumfile = sumfile + ".js"
 	} else {
-		return nil, errors.New("Empty packfile is not allowed")
+		return errors.New("Empty packfile is not allowed")
 	}
 
-	p.PackedUrl = pk.CacheUrl + sumfile
-	p.PackedPath = pk.CachePath + sumfile
+	p.PackedUrl = p.pk.CacheUrl + sumfile
+	p.PackedPath = p.pk.CachePath + sumfile
 
 	stat, err := os.Lstat(p.PackedPath)
 	if err == nil {
 		if stat.Size() == size {
 			// nothing more to do, the file exists so we can
 			// return early
-			return &p, nil
+			return nil
 		}
 		log.Println("Warning: pack file \"" + p.PackedPath + "\" has the wrong file size.  Attempting to overwrite.")
 	}
 
 	outfile, err := os.Create(p.PackedPath)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer outfile.Close()
 
 	outfile.Write(out.Bytes())
-	return &p, nil
+	return nil
 }
 
 func (pk *Env) Include(pack *Pack) {

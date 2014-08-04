@@ -1,0 +1,12 @@
+html, body {
+	margin: 0px;
+	padding: 0px;
+}
+
+.menu a {
+	display: block;
+	font-weight: normal;
+}
+.menu a.current {
+	font-weight: bold;
+}
