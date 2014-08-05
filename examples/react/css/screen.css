@@ -3,10 +3,14 @@ html, body {
 	padding: 0px;
 }
 
+.menu {
+	margin: 2em;
+}
 .menu a {
-	display: block;
-	font-weight: normal;
+	margin-left: 0.5em;
+	text-decoration: none;
+	color: gray;
 }
 .menu a.current {
-	font-weight: bold;
+	color: green;
 }

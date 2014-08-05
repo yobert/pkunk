@@ -23,8 +23,8 @@ type Pack struct {
 	PackedPath string
 	Type       packType
 
-	Title	string
-	Paths	[]string
+	Title string
+	Paths []string
 
 	pk *Env
 }

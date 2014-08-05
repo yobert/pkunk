@@ -3,6 +3,8 @@
 /examples/static/static
 
 /examples/react/js/bundle.js
+/examples/react/js/client.js
+/examples/react/js/server.js
 /examples/react/react
 /examples/react/cache
 /examples/react/node_modules

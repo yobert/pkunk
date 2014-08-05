@@ -6,6 +6,12 @@ import (
 	"net/http"
 )
 
+func singleFile(url string, path string) {
+	http.HandleFunc(url, func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, path)
+	})
+}
+
 func main() {
 	pk := pkunk.New(http.DefaultServeMux)
 
@@ -13,7 +19,7 @@ func main() {
 	pk.Resources("./js/", "./css/")
 
 	base, err := pk.NewPack("base",
-		"bundle.js",
+		"client.js",
 	)
 	if err != nil {
 		panic(err)
@@ -32,6 +38,9 @@ func main() {
 	pk.JsonURL("/", nil)
 
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./images/"))))
+	singleFile("/favicon.ico", "./favicon.ico")
+
+	pk.TestOtto()
 
 	fmt.Println("serving on :8080")
 	http.ListenAndServe(":8080", nil)

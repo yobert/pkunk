@@ -42,6 +42,7 @@ func main() {
 
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./images/"))))
 	singleFile("/robots.txt", "./robots.txt")
+	singleFile("/favicon.ico", "./favicon.ico")
 
 	fmt.Println("serving on :8080")
 	http.ListenAndServe(":8080", nil)
