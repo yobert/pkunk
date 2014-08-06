@@ -1,4 +1,3 @@
-(function(){
 
 console.log("here");
 
@@ -34,7 +33,7 @@ var Menu = react.createClass({
 		return <div className="menu">MENYOUUUU
 			<HighlightedLink href="/" activeClassName="current">home</HighlightedLink>
 			<HighlightedLink href="/test" activeClassName="current">test 1</HighlightedLink>
-			<HighlightedLink href="/test/stuff" activeClassName="current">test 2</HighlightedLink>
+			<HighlightedLink href="/test/global" activeClassName="current">test 2</HighlightedLink>
 		</div>
 	}
 });
@@ -79,14 +78,5 @@ var app = react.createClass({
 	}
 });
 
+module.exports = app;
 
-stuff.main_render = function() {
-	react.renderComponent(app(), document.body);
-	return;
-}
-
-stuff.main_prerender = function() {
-	return react.renderComponentToString(app());
-}
-
-})();

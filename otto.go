@@ -53,8 +53,12 @@ func (pk *Env) GetOttoRuntime() (*otto.Otto, error) {
 	o := otto.New()
 
 	_, err := o.Run(`
-var stuff = {};
-var global = {};
+var process = {
+	env: {
+		NODE_ENV: "testing"
+	}
+};
+var path = "/";
 `)
 
 	if err != nil {
@@ -65,8 +69,8 @@ var global = {};
 		if pack.Type != PACK_JS {
 			continue
 		}
-		path := pack.PackedPath
-		//path := "./js/server.js"
+		//path := pack.PackedPath
+		path := "./cache/server_packed.js"
 		fmt.Println("compiling " + path + "...")
 
 		s, err := o.Compile(path, nil)
@@ -74,12 +78,18 @@ var global = {};
 			return nil, err
 		}
 
-		_, err = o.Run(s)
+		v, err := o.Run(s)
 		if err != nil {
 			return nil, err
 		}
 
 		fmt.Println("compilation done")
+		str, err := v.ToString()
+		if err != nil {
+			fmt.Println("return value was not a string")
+		} else {
+			fmt.Println("returned: ["+str+"]")
+		}
 	}
 
 	//	ottos[key] = o

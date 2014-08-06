@@ -16,7 +16,7 @@ func main() {
 	pk := pkunk.New(http.DefaultServeMux)
 
 	pk.Cache("./cache/")
-	pk.Resources("./js/", "./css/")
+	pk.Resources("./js/", "./css/", "./cache/")
 
 	base, err := pk.NewPack("base",
 		"client.js",
