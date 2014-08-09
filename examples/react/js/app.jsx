@@ -1,10 +1,6 @@
 
-console.log("here");
-
 var react = require('react');
 var router = require('react-router-component');
-
-console.log("now here");
 
 var locations = router.Locations;
 var location = router.Location;

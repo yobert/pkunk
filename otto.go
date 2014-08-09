@@ -2,138 +2,41 @@ package pkunk
 
 import (
 	"fmt"
-	"github.com/robertkrimen/otto"
+	"github.com/yobert/pkunk/vm"
 	"html/template"
 	"os"
 )
 
-//var ottos map[string]*otto.Otto
-
-//func init() {
-//	ottos = make(map[string]*otto.Otto)
-//}
-
 func (pk *Env) TestOtto() {
-	o, err := pk.GetOttoRuntime()
-	if err != nil {
-		if oe, ok := err.(*otto.Error); ok {
-			fmt.Println(oe.String())
-			os.Exit(0)
-		}
-		fmt.Println(err.Error())
-		os.Exit(0)
+
+	_, err := pk.Prerender()
+	if vm.LogError(err) {
+		os.Exit(1)
 	}
-	_, err = o.Run("global.main_prerender();")
-	if err != nil {
-		if oe, ok := err.(*otto.Error); ok {
-			fmt.Println(oe.String())
-			os.Exit(0)
-		}
-		fmt.Println(err.Error())
-		os.Exit(0)
-	}
+
 	fmt.Println("otto runtime ready")
 }
 
-func (pk *Env) GetOttoRuntime() (*otto.Otto, error) {
-	//	key := ""
-	//	for _, pack := range pk.Packs {
-	//		if pack.Type != PACK_JS {
-	//			continue
-	//		}
-	//
-	//		key += "," + pack.PackedPath
-	//	}
-
-	//	o, ok := ottos[key]
-	//	if ok {
-	//		return o.Copy(), nil
-	//	}
-
-	o := otto.New()
-
-	_, err := o.Run(`
-var process = {
-	env: {
-		NODE_ENV: "testing"
-	}
-};
-var path = "/";
-`)
-
-	if err != nil {
-		return nil, err
-	}
-
-	for _, pack := range pk.Packs {
-		if pack.Type != PACK_JS {
-			continue
-		}
-		//path := pack.PackedPath
-		path := "./cache/server_packed.js"
-		fmt.Println("compiling " + path + "...")
-
-		s, err := o.Compile(path, nil)
-		if err != nil {
-			return nil, err
-		}
-
-		v, err := o.Run(s)
-		if err != nil {
-			return nil, err
-		}
-
-		fmt.Println("compilation done")
-		str, err := v.ToString()
-		if err != nil {
-			fmt.Println("return value was not a string")
-		} else {
-			fmt.Println("returned: ["+str+"]")
-		}
-	}
-
-	//	ottos[key] = o
-	//	return o.Copy(), nil
-	return o, nil
-}
-
 func (pk *Env) Prerender() (template.HTML, error) {
-
-	o, err := pk.GetOttoRuntime()
+	v, err := vm.New()
 	if err != nil {
 		return "", err
 	}
 
-	v, err := o.Run("stuff.main_prerender();")
+	err = v.RunFile("./js/server.js")
 	if err != nil {
 		return "", err
 	}
 
-	str, err := v.ToString()
+	val, err := v.Otto.Run("prerender();")
+	if err != nil {
+		return "", err
+	}
+
+	str, err := val.ToString()
 	if err != nil {
 		return "", err
 	}
 
 	return template.HTML(str), nil
 }
-
-/*func otto_require_shim(call otto.FunctionCall) otto.Value {
-    const requireHeader = `(function() {
-    var module = { exports: {} };
-    var exports = module.exports;`
-    const requireFooter = `   return module.exports;
-}());`
-    path, err := call.Argument(0).ToString()
-    if err != nil {
-        return otto.UndefinedValue()
-    }
-    body, err := ioutil.ReadFile(path)
-    if err != nil {
-        return otto.UndefinedValue()
-    }
-    val, err := vm.Run(requireHeader + string(body) + requireFooter)
-    if err != nil {
-        return otto.UndefinedValue()
-    }
-    return val
-}*/
