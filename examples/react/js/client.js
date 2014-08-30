@@ -1,5 +1,7 @@
 var app = require('./app.jsx');
-var react = require('react');
+var React = require('react');
 
-react.renderComponent(app(), document.body);
+window.main = function() {
+	React.renderComponent(app(), document.body);
+};
 

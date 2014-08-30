@@ -48,8 +48,8 @@ func (p *Pack) Repack() error {
 	var ptype packType = -1
 
 	for _, rawpath := range p.Paths {
-		// search for path
-		path := rawpath
+		// search resource paths
+		path := ""
 		for _, r := range p.pk.resourcePaths {
 			f, e := os.Open(r + rawpath)
 			if e != nil {
@@ -58,6 +58,9 @@ func (p *Pack) Repack() error {
 			f.Close()
 			path = r + rawpath
 			break
+		}
+		if path == "" {
+			return errors.New("Could not find \"" + rawpath + "\" in Resources path list")
 		}
 
 		var pt packType

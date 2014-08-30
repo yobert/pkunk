@@ -1,5 +1,6 @@
 package pkunk
 
+/*
 import (
 	"fmt"
 	"github.com/yobert/pkunk/vm"
@@ -39,4 +40,4 @@ func (pk *Env) Prerender() (template.HTML, error) {
 	}
 
 	return template.HTML(str), nil
-}
+}*/

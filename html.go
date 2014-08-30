@@ -37,7 +37,7 @@ func (pk *Env) Render(w http.ResponseWriter, r *http.Request, prerender template
 		JS        []string
 		CSS       []string
 		Data      interface{}
-		Onload    string
+		Onload    template.JS
 		Prerender template.HTML
 	}
 

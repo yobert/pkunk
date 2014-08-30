@@ -35,6 +35,7 @@ func New() (*VM, error) {
 
 	o.Run(`
 var process = {env:{}};
+var prerender_path = "/";
 `)
 
 	vm := VM{

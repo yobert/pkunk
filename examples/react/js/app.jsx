@@ -1,12 +1,12 @@
 
-var react = require('react');
+var React = require('react');
 var router = require('react-router-component');
 
-var locations = router.Locations;
-var location = router.Location;
+var Locations = router.Locations;
+var Location = router.Location;
 
 var Link = router.Link;
-var HighlightedLink = react.createClass({
+var HighlightedLink = React.createClass({
 
 	mixins: [router.NavigatableMixin],
 
@@ -24,17 +24,20 @@ var HighlightedLink = react.createClass({
 	}
 });
 
-var Menu = react.createClass({
+var todos = require('./views/todos');
+
+var Menu = React.createClass({
 	render: function() {
 		return <div className="menu">MENYOUUUU
 			<HighlightedLink href="/" activeClassName="current">home</HighlightedLink>
 			<HighlightedLink href="/test" activeClassName="current">test 1</HighlightedLink>
 			<HighlightedLink href="/test/global" activeClassName="current">test 2</HighlightedLink>
+			<HighlightedLink href="/todos" activeClassName="current">todo test</HighlightedLink>
 		</div>
 	}
 });
 
-var home = react.createClass({
+var home = React.createClass({
 	render: function() {
 		return <div>
 			<Menu />
@@ -44,7 +47,7 @@ var home = react.createClass({
 	}
 });
 
-var test = react.createClass({
+var test = React.createClass({
 	render: function() {
 		return <div>
 			<Menu /><h3>TEST {this.props.crap}</h3>
@@ -52,7 +55,7 @@ var test = react.createClass({
 	}
 });
 
-var error = react.createClass({
+var error = React.createClass({
 	render: function() {
 			return <div>
 				<Menu />
@@ -62,14 +65,17 @@ var error = react.createClass({
 	}
 });
 
-var app = react.createClass({
+var notfound = router.NotFound;
+
+var app = React.createClass({
 	render: function() {
 		return (
-			<locations>
-				<location path="/" handler={home} />
-				<location path="/test/:crap" handler={test} />
-				<router.NotFound handler={error} />
-			</locations>
+		<Locations path={this.props.path}>
+				<Location path="/" handler={home} />
+				<Location path="/test/:crap" handler={test} />
+				<Location path="/todos" handler={todos} />
+				<notfound handler={error} />
+			</Locations>
 		)
 	}
 });

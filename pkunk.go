@@ -1,11 +1,12 @@
 package pkunk
 
 import (
-	"fmt"
-	"github.com/robertkrimen/otto"
+	//	"fmt"
+	//	"github.com/robertkrimen/otto"
 	"log"
 	"net/http"
-	"os"
+	//	"os"
+	"strings"
 )
 
 type Env struct {
@@ -38,6 +39,16 @@ func New(mux *http.ServeMux) *Env {
 	return &pk
 }
 
+func (pk *Env) Static(pattern string, path string) {
+	if strings.HasSuffix(pattern, "/") {
+		pk.ServeMux.Handle(pattern, http.StripPrefix(pattern, http.FileServer(http.Dir(path))))
+	} else {
+		http.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
+			http.ServeFile(w, r, path)
+		})
+	}
+}
+
 func (pk *Env) Cache(path string) {
 	url := "/cache/"
 
@@ -67,7 +78,7 @@ func (pk *Env) JsonURL(url string, handler JsonHandlerFunc) {
 
 		pk.ProcessPacks()
 
-		html, err := pk.Prerender()
+		/*html, err := pk.Prerender()
 		if err != nil {
 			if oe, ok := err.(*otto.Error); ok {
 				fmt.Println(oe.String())
@@ -76,7 +87,8 @@ func (pk *Env) JsonURL(url string, handler JsonHandlerFunc) {
 
 			panic(err)
 		}
+		pk.Render(w, r, html)*/
 
-		pk.Render(w, r, html)
+		pk.Render(w, r, "")
 	})
 }

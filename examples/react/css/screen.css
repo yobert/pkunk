@@ -12,5 +12,5 @@ html, body {
 	color: gray;
 }
 .menu a.current {
-	color: green;
+	text-decoration: underline;
 }
