@@ -21,6 +21,8 @@ func main() {
 
 	css, err := pk.NewPack("base-css",
 		"screen.css",
+		"todo_base.css",
+		"todo.css",
 	)
 	if err != nil {
 		panic(err)
@@ -29,10 +31,10 @@ func main() {
 	pk.Include(base)
 	pk.Include(css)
 
-	pk.JsonURL("/", nil)
-
 	pk.Static("/images/", "./images/")
 	pk.Static("/favicon.ico", "./favicon.ico")
+
+	pk.BaseURL("/")
 
 	fmt.Println("serving on :8080")
 	http.ListenAndServe(":8080", nil)

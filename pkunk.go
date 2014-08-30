@@ -21,7 +21,7 @@ type Env struct {
 	resourcePaths []string
 }
 
-type JsonHandlerFunc func(w http.ResponseWriter, r *http.Request)
+//type JsonHandlerFunc func(w http.ResponseWriter, r *http.Request)
 
 //func (pk *Env) rootHandler(w http.ResponseWriter, r *http.Request) {
 //	pk.bootstrap(w, r)
@@ -71,11 +71,13 @@ func (pk *Env) ProcessPacks() {
 	}
 }
 
-func (pk *Env) JsonURL(url string, handler JsonHandlerFunc) {
+func (pk *Env) BaseURL(url string) { //, handler JsonHandlerFunc) {
 
 	pk.ServeMux.HandleFunc(url, func(w http.ResponseWriter, r *http.Request) {
 		log.Println(r.URL.Path)
 
+		// for now, always re-analyze to see if the contents of the javscript
+		// changed and need to be repacked
 		pk.ProcessPacks()
 
 		/*html, err := pk.Prerender()

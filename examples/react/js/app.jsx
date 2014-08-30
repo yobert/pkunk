@@ -24,7 +24,7 @@ var HighlightedLink = React.createClass({
 	}
 });
 
-var todos = require('./views/todos');
+var todos = require('./todo_example/components/TodoApp.react');
 
 var Menu = React.createClass({
 	render: function() {
