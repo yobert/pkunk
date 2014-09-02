@@ -102,6 +102,10 @@ func (p *Pack) Repack() error {
 		return errors.New("Empty packfile is not allowed")
 	}
 
+	if p.pk.CacheUrl == "" || p.pk.CachePath == "" {
+		return errors.New("CachePath not set")
+	}
+
 	p.PackedUrl = p.pk.CacheUrl + sumfile
 	p.PackedPath = p.pk.CachePath + sumfile
 

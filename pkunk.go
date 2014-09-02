@@ -55,7 +55,7 @@ func (pk *Env) Cache(path string) {
 	pk.CacheUrl = url
 	pk.CachePath = path
 
-	pk.ServeMux.Handle(url, http.StripPrefix(url, http.FileServer(http.Dir(path))))
+	pk.Static(url, path)
 }
 
 func (pk *Env) Resources(resources ...string) {
