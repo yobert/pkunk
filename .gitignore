@@ -5,3 +5,7 @@
 /examples/react/react
 /examples/react/cache
 /examples/react/node_modules
+
+/examples/todo/todo
+/examples/todo/cache
+/examples/todo/node_modules
