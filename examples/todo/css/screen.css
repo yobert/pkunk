@@ -8,6 +8,20 @@ body {
 	background-color: #fff;
 }
 
+.jsb_ui_dialog_title {
+	background: linear-gradient(100deg, #777 10%, #aaa 80%, #999 90%);
+}
+.jsb_ui_dialog_active .jsb_ui_dialog_title {
+	background: linear-gradient(100deg, #555 10%, #888 80%, #777 90%);
+}
+
+.jsb_ui_dialog_body,
+.jsb_ui_dialog_active .jsb_ui_dialog_body {
+	background: linear-gradient(100deg, #ccc 10%, #eee 80%, #ddd 90%);
+}
+
+
+
 .touch {
 	padding: 8px;
 }
