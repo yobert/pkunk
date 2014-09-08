@@ -9,19 +9,24 @@ var Item = React.createClass({
 	dpkey: 'item_id',
 
 	itemTitle: function(event) {
-		//this.setState({item_title: event.target.value});
 		this.selfPub({item_title: event.target.value});
 	},
-
-	getInitialState: function() {
-		return {'item_title': ''};
+	itemDone: function(event) {
+		this.selfPub({item_done: event.target.checked});
 	},
 
 	render: function() {
 		return (
-			<div>
-				Item Title: <input type="text" size="30" value={this.state.item_title} onChange={this.itemTitle} autoFocus={true} />
-			</div>
+			<table className="formtable">
+				<tr>
+					<td><input type="checkbox" checked={this.state.item_done} onChange={this.itemDone} /></td>
+					<td>Done?</td>
+				</tr>
+				<tr>
+					<td>Title:</td>
+					<td><input type="text" size="30" value={this.state.item_title} onChange={this.itemTitle} autoFocus={true} /></td>
+				</tr>
+			</table>
 		);
 	}
 });

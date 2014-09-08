@@ -10,7 +10,10 @@ var datamixin = {
 	getInitialState: function() {
 		var state = {};
 
-		//if(!this.props[this.dpkey])
+		if(this.props.initial) {
+			state = this.props.initial;
+			console.log('initial state from props', state);
+		}
 
 		if(!state._local_id) {
 			state._local_id = 'lk' + (next_id++);

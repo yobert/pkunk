@@ -24,3 +24,11 @@ body {
 	background-color: #ddd;
 	border-bottom: 2px solid #aaa;
 }
+
+.formtable td:first-child {
+	text-align: right;
+}
+
+.list_item_done {
+	background-color: green;
+}
