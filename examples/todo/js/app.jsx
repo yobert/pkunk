@@ -2,6 +2,8 @@ var React = require('react');
 
 var List = require('./list');
 
+var store = require('./store');
+
 var app = React.createClass({
 	render: function() {
 		return (
