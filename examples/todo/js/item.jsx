@@ -2,6 +2,8 @@ var React = require('react');
 
 var datamixin = require('./datamixin');
 
+var ahoyo = "wtf";
+
 var Item = React.createClass({
 	mixins: [datamixin],
 
@@ -25,6 +27,10 @@ var Item = React.createClass({
 				<tr>
 					<td>Title:</td>
 					<td><input type="text" size="30" value={this.state.item_title} onChange={this.itemTitle} autoFocus={true} /></td>
+				</tr>
+				<tr>
+					<td>Test:</td>
+					<td><input type="text" size="30" value={ahoyo} /></td>
 				</tr>
 			</table>
 		);

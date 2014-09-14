@@ -1,4 +1,39 @@
-var ps = require('./pubsub');
+
+var store = require('./store');
+
+var listmixin = {
+	componentWillMount: function() {
+		this._grabs = {};
+	},
+	componentWillUnmount: function() {
+		var s;
+		for(var path in this._grabs) {
+			s = this._grabs[path];
+			s.removeListener('CHANGE', this.storeUpdated);
+		}
+		delete this._grabs;
+	},
+	storeUpdated: function() {
+		this.forceUpdate();
+	},
+	grab: function(path) {
+		var s = this._grabs[path];
+		if(!s) {
+			s = store.Find(path);
+			if(!s)
+				throw("Grab failed: Unable to find path '" + path + "' in store '" + store.Name + "'");
+
+			s.addListener('CHANGE', this.storeUpdated);
+			this._grabs[path] = s;
+		}
+
+		return s;
+	}
+};
+
+module.exports = listmixin;
+
+/*var ps = require('./pubsub');
 var mergeInto = require('react/lib/mergeInto');
 
 var next_id = 0;
@@ -50,4 +85,4 @@ var listmixin = {
 	'dataChanged': dataChanged
 };
 
-module.exports = listmixin;
+module.exports = listmixin;*/

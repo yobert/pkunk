@@ -1,27 +1,34 @@
 var React = require('react');
 
 var listmixin = require('./listmixin');
-var Item = require('./item');
+//var Item = require('./item');
 
-var ps = require('./pubsub');
+var store = require('./store');
+var undb = require('github.com/yobert/undb/js/undb');
 
 var List = React.createClass({
 	mixins: [listmixin],
-
-	dclass: 'item',
 
 	render: function() {
 		var list = [];
 
 		var t = this;
 
-		array_each(this.state.data_list, function(v, k) {
+		var todos = this.grab('tododb.todos');
+
+		array_each(todos.Records, function(s, id) {
+			if(s.Deleted)
+				return;
+
+			var v = s.Records;
+
 			var cls = "touch list_item";
-			if(v.item_done)
+			if(v.Done)
 				cls += " list_item_done";
 
 			list.push(
-				<div className={cls} key={v._local_id} onClick={function(){
+				<div className={cls} key={id}>
+{/*		<div className={cls} key={v._local_id} onClick={function(){
 
 						var body = tag('div');
 						var dialog = jsb_ui_new_dialog({'title':'Edit Todo', 'center':true, 'onclose':function() {
@@ -40,8 +47,8 @@ var List = React.createClass({
 					React.renderComponent(Item({'initial':v}), body);
 					jsb_ui_center_dialog(dialog);
 
-				}}>
-				Item {v._local_id}: <b>"{v.item_title}"</b>
+				}}>*/}
+				Item {id}: <b>"{v.Title}"</b>
 				</div>
 			);
 		});
@@ -50,7 +57,18 @@ var List = React.createClass({
 			<div>
 				<div className="list_controls">
 					<input type="button" value="Add" onClick={function() {
-						var body = tag('div');
+						var id = todos.Seq();
+						var err = todos.Insert(new undb.Store(id, undb.VALUES));
+						if(err)
+							throw(err);
+
+						var t = todos.FindOrThrow(todos.Name + '.' + id);
+
+						err = t.Update({'Title':'', 'Done':false});
+						if(err)
+							throw(err);
+
+/*						var body = tag('div');
 						var dialog = jsb_ui_new_dialog({'title':'Add Todo', 'center':true, 'onclose':function() {
 							React.unmountComponentAtNode(body);
 							return true;
@@ -59,7 +77,7 @@ var List = React.createClass({
 						}}]);
 
 						React.renderComponent(Item({}), body);
-						jsb_ui_center_dialog(dialog);
+						jsb_ui_center_dialog(dialog);*/
 					}} />
 				</div>
 				{list}

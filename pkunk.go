@@ -9,6 +9,8 @@ import (
 	"strings"
 )
 
+//type JsonHandlerFunc func(w http.ResponseWriter, r *http.Request)
+
 type Env struct {
 	//	RootHandler func(http.ResponseWriter, *http.Request)
 	ServeMux *http.ServeMux
@@ -21,7 +23,7 @@ type Env struct {
 	resourcePaths []string
 }
 
-//type JsonHandlerFunc func(w http.ResponseWriter, r *http.Request)
+type HandlerFunc func(w http.ResponseWriter, r *http.Request)
 
 //func (pk *Env) rootHandler(w http.ResponseWriter, r *http.Request) {
 //	pk.bootstrap(w, r)
@@ -43,7 +45,7 @@ func (pk *Env) Static(pattern string, path string) {
 	if strings.HasSuffix(pattern, "/") {
 		pk.ServeMux.Handle(pattern, http.StripPrefix(pattern, http.FileServer(http.Dir(path))))
 	} else {
-		http.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
+		pk.ServeMux.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
 			http.ServeFile(w, r, path)
 		})
 	}
