@@ -1,36 +1,35 @@
 var React = require('react');
 
-var datamixin = require('./datamixin');
-
-var ahoyo = "wtf";
+var undbmixin = require('./undbmixin');
 
 var Item = React.createClass({
-	mixins: [datamixin],
-
-	dclass: 'item',
-	dpkey: 'item_id',
+	mixins: [undbmixin],
 
 	itemTitle: function(event) {
-		this.selfPub({item_title: event.target.value});
+		var todo = this.grab('tododb.todos.' + this.props.Name);
+		todo.Merge({Title: event.target.value});
 	},
 	itemDone: function(event) {
-		this.selfPub({item_done: event.target.checked});
+		var todo = this.grab('tododb.todos.' + this.props.Name);
+		todo.Merge({Done: event.target.checked});
 	},
 
 	render: function() {
+		var todo = this.grab('tododb.todos.' + this.props.Name);
+
 		return (
 			<table className="formtable">
 				<tr>
-					<td><input type="checkbox" checked={this.state.item_done} onChange={this.itemDone} /></td>
+					<td><input type="checkbox" checked={todo.Records.Done} onChange={this.itemDone} /></td>
 					<td>Done?</td>
 				</tr>
 				<tr>
 					<td>Title:</td>
-					<td><input type="text" size="30" value={this.state.item_title} onChange={this.itemTitle} autoFocus={true} /></td>
+					<td><input type="text" size="30" value={todo.Records.Title} onChange={this.itemTitle} autoFocus={true} /></td>
 				</tr>
 				<tr>
-					<td>Test:</td>
-					<td><input type="text" size="30" value={ahoyo} /></td>
+					<td >Deleted:</td>
+					<td>{todo.Deleted ? 'true' : 'false'}</td>
 				</tr>
 			</table>
 		);

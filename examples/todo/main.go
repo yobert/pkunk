@@ -14,7 +14,7 @@ func send_test(db *undb.Store, i int) {
 
 	t := db.Find("tododb.todos.2")
 	if t != nil {
-		t.Merge(map[string]interface{}{"Title": fmt.Sprintf("Item 2 gets thumped from the server (%d seconds)", i)}, "thumper")
+		t.Merge(map[string]interface{}{"Title": fmt.Sprintf("(%d secs) Item 2 thump", i)}, "thumper")
 	}
 
 }

@@ -1,13 +1,15 @@
 var React = require('react');
 
-var listmixin = require('./listmixin');
-//var Item = require('./item');
+var undbmixin = require('./undbmixin');
+var Item = require('./item');
+
+var data = require('./data');
 
 var store = require('./store');
 var undb = require('github.com/yobert/undb/js/undb');
 
 var List = React.createClass({
-	mixins: [listmixin],
+	mixins: [undbmixin],
 
 	render: function() {
 		var list = [];
@@ -27,28 +29,10 @@ var List = React.createClass({
 				cls += " list_item_done";
 
 			list.push(
-				<div className={cls} key={id}>
-{/*		<div className={cls} key={v._local_id} onClick={function(){
-
-						var body = tag('div');
-						var dialog = jsb_ui_new_dialog({'title':'Edit Todo', 'center':true, 'onclose':function() {
-							React.unmountComponentAtNode(body);
-							return true;
-						}}, body, ['Close', {'value':'Delete', 'onclick':function(){
-							// delete the thing!
-							var payload = {'_delete':true, '_local_id':v._local_id};
-
-							ps.pub('data_' + t.dclass + '_' + v._local_id, payload);
-							ps.pub('datalist_' + t.dclass, payload);
-
-							return false;
-						}}]);
-
-					React.renderComponent(Item({'initial':v}), body);
-					jsb_ui_center_dialog(dialog);
-
-				}}>*/}
-				Item {id}: <b>"{v.Title}"</b>
+				<div className={cls} key={id} onClick={function(){
+					data.edit(s, Item({Name: id}));
+				}}>
+				{v.Title ? '"' + v.Title + '"' : '(No title)' }
 				</div>
 			);
 		});
@@ -57,27 +41,24 @@ var List = React.createClass({
 			<div>
 				<div className="list_controls">
 					<input type="button" value="Add" onClick={function() {
-						var id = todos.Seq();
-						var err = todos.Insert(new undb.Store(id, undb.VALUES));
+						var s = new undb.Store(todos.Seq(), undb.VALUES);
+						var err = todos.Insert(s);
 						if(err)
 							throw(err);
 
-						var t = todos.FindOrThrow(todos.Name + '.' + id);
-
-						err = t.Update({'Title':'', 'Done':false});
+						err = s.Update({'Title':'', 'Done':false});
 						if(err)
 							throw(err);
 
-/*						var body = tag('div');
-						var dialog = jsb_ui_new_dialog({'title':'Add Todo', 'center':true, 'onclose':function() {
-							React.unmountComponentAtNode(body);
-							return true;
-						}}, body, ['Close', {'value':'Delete', 'onclick':function(){
-							return true;
-						}}]);
+						data.edit(s, Item({Name: s.Name}));
+					}} />
 
-						React.renderComponent(Item({}), body);
-						jsb_ui_center_dialog(dialog);*/
+					<input type="button" value="Delete Done" onClick={function() {
+						array_each(todos.Records, function(s, id) {
+							if(s.Deleted || !s.Records.Done)
+								return;
+							s.Delete();
+						});
 					}} />
 				</div>
 				{list}
