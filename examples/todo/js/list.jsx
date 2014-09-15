@@ -8,6 +8,16 @@ var data = require('./data');
 var store = require('./store');
 var undb = require('github.com/yobert/undb/js/undb');
 
+function compare_by_title(a, b) {
+	var at = a.Records.Title;
+	var bt = b.Records.Title;
+	if(at < bt)
+		return -1;
+	if(at > bt)
+		return 1;
+	return 0;
+}
+
 var List = React.createClass({
 	mixins: [undbmixin],
 
@@ -18,7 +28,15 @@ var List = React.createClass({
 
 		var todos = this.grab('tododb.todos');
 
-		array_each(todos.Records, function(s, id) {
+		// sort by title
+		var sl = [];
+		array_each(todos.Records, function(s) {
+			sl.push(s);
+		});
+
+		sl.sort(compare_by_title);
+
+		array_each(sl, function(s) {
 			if(s.Deleted)
 				return;
 
@@ -29,10 +47,10 @@ var List = React.createClass({
 				cls += " list_item_done";
 
 			list.push(
-				<div className={cls} key={id} onClick={function(){
-					data.edit(s, Item({Name: id}));
+				<div className={cls} key={s.Name} onClick={function(){
+					data.edit(s, Item({Name: s.Name}));
 				}}>
-				{v.Title ? '"' + v.Title + '"' : '(No title)' }
+					{v.Title ? '"' + v.Title + '"' : '(No title)' }
 				</div>
 			);
 		});

@@ -25,7 +25,7 @@ var Item = React.createClass({
 				</tr>
 				<tr>
 					<td>Title:</td>
-					<td><input type="text" size="30" value={todo.Records.Title} onChange={this.itemTitle} autoFocus={true} /></td>
+					<td><input type="text" size="30" value={todo.Records.Title} onChange={this.itemTitle} /></td>
 				</tr>
 				<tr>
 					<td >Deleted:</td>

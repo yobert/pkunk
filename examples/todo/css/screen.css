@@ -20,6 +20,10 @@ body {
 	background: linear-gradient(100deg, #ccc 10%, #eee 80%, #ddd 90%);
 }
 
+.jsb_ui_dialog,
+.jsb_ui_dialog_active.jsb_ui_dialog {
+	box-shadow: 5px 5px 10px black;
+}
 
 
 .touch {
@@ -43,6 +47,12 @@ body {
 	text-align: right;
 }
 
-.list_item_done {
-	background-color: green;
+.list_item {
+	color: #05c;
+}
+.list_item.list_item_done {
+	color: #ccc;
+}
+.list_item:hover {
+	cursor: pointer;
 }

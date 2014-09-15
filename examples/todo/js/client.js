@@ -2,11 +2,8 @@ var store = require('./store');
 var app = require('./app');
 var React = require('react');
 
-function first_render() {
-	React.renderComponent(app(), document.body);
-}
-
 window.main = function() {
+	React.renderComponent(app({initializing:true}), document.body);
 
 	var initialized;
 
@@ -37,6 +34,7 @@ window.main = function() {
 	ws.onclose = function() {
 		store.removeListener('CHANGE', onchange);
 		console.log("websocket closed");
+		React.renderComponent(app({'closed':true}), document.body);
 	};
 
 	ws.onerror = function(err) {
@@ -57,7 +55,7 @@ window.main = function() {
 
 		if(!initialized) {
 			initialized = true;
-			first_render();
+			React.renderComponent(app({}), document.body);
 		}
 	};
 };
