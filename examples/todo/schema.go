@@ -24,7 +24,7 @@ func schema_init() *undb.Store {
 	row = undb.New(todos.Seq(), undb.VALUES)
 	row.Update(map[string]interface{}{
 		"Title": "test item 2",
-		"Done":  true,
+		"Done":  false,
 	}, source)
 	todos.Insert(row, source)
 
@@ -40,6 +40,13 @@ func schema_init() *undb.Store {
 	row.Update(map[string]interface{}{
 		"Title": "test item 4",
 		"Done":  false,
+	}, source)
+	todos.Insert(row, source)
+
+	row = undb.New(todos.Seq(), undb.VALUES)
+	row.Update(map[string]interface{}{
+		"Title": "test item 5",
+		"Done":  true,
 	}, source)
 	todos.Insert(row, source)
 

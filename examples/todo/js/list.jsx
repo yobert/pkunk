@@ -47,10 +47,12 @@ var List = React.createClass({
 				cls += " list_item_done";
 
 			list.push(
-				<div className={cls} key={s.Name} onClick={function(){
-					data.edit(s, Item({Name: s.Name}));
-				}}>
-					{v.Title ? '"' + v.Title + '"' : '(No title)' }
+				<div className="touch" key={s.Name}>
+					<span className={cls} onClick={function(){
+						data.edit(s, Item({Name: s.Name}));
+					}}>
+						{v.Title ? '"' + v.Title + '"' : '(No title)' }
+					</span>
 				</div>
 			);
 		});
