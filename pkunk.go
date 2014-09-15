@@ -11,8 +11,6 @@ import (
 	"html/template"
 )
 
-//type JsonHandlerFunc func(w http.ResponseWriter, r *http.Request)
-
 type Env struct {
 	//	RootHandler func(http.ResponseWriter, *http.Request)
 	ServeMux *http.ServeMux
@@ -28,7 +26,9 @@ type Env struct {
 	Head template.HTML
 }
 
-type HandlerFunc func(w http.ResponseWriter, r *http.Request)
+type HandlerFunc func(http.ResponseWriter, *http.Request)
+
+//type JsonHandlerFunc func(w http.ResponseWriter, r *http.Request)
 
 //func (pk *Env) rootHandler(w http.ResponseWriter, r *http.Request) {
 //	pk.bootstrap(w, r)

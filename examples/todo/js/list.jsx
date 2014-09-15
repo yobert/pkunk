@@ -1,6 +1,6 @@
 var React = require('react');
 
-var undbmixin = require('./undbmixin');
+var undbmixin = require('github.com/yobert/undb/js/react');
 var Item = require('./item');
 
 var data = require('./data');
@@ -20,6 +20,7 @@ function compare_by_title(a, b) {
 
 var List = React.createClass({
 	mixins: [undbmixin],
+	store: store,
 
 	render: function() {
 		var list = [];

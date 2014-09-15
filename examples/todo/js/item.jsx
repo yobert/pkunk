@@ -1,9 +1,12 @@
 var React = require('react');
 
-var undbmixin = require('./undbmixin');
+var undbmixin = require('github.com/yobert/undb/js/react');
+var store = require('./store');
 
 var Item = React.createClass({
 	mixins: [undbmixin],
+
+	store: store,
 
 	itemTitle: function(event) {
 		var todo = this.grab('tododb.todos.' + this.props.Name);
