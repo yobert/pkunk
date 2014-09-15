@@ -80,6 +80,14 @@ var List = React.createClass({
 							s.Delete();
 						});
 					}} />
+
+					<input type="button" value="Delete No-title items" onClick={function() {
+						array_each(todos.Records, function(s, id) {
+							if(s.Deleted || s.Records.Title)
+								return;
+							s.Delete();
+						});
+					}} />
 				</div>
 				{list}
 			</div>
