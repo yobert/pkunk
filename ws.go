@@ -10,11 +10,13 @@ var ws_upgrader = websocket.Upgrader{
 	WriteBufferSize: 8192,
 }
 
-type WebsocketHandlerFunc func(*websocket.Conn)
+type WebsocketHandler interface {
+	Authenticate(http.ResponseWriter, *http.Request) bool
+	Handle(*websocket.Conn)
+}
 
-func (pk *Env) Websocket(url string, handler WebsocketHandlerFunc) {
+func (pk *Env) Websocket(url string, handlerbuilder func() WebsocketHandler) {
 	pk.ServeMux.HandleFunc(url, func(w http.ResponseWriter, r *http.Request) {
-
 		if r.Method != "GET" {
 			http.Error(w, "Method not allowed", 405)
 			return
@@ -22,6 +24,13 @@ func (pk *Env) Websocket(url string, handler WebsocketHandlerFunc) {
 
 		if r.Header.Get("Origin") != "http://"+r.Host { // TODO check for https
 			http.Error(w, "Origin not allowed", 403)
+			return
+		}
+
+		handler := handlerbuilder()
+		success := handler.Authenticate(w, r)
+
+		if !success {
 			return
 		}
 
@@ -34,6 +43,7 @@ func (pk *Env) Websocket(url string, handler WebsocketHandlerFunc) {
 			return
 		}
 
-		handler(ws)
+		defer ws.Close()
+		handler.Handle(ws)
 	})
 }

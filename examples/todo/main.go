@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/gorilla/websocket"
 	"github.com/yobert/pkunk"
 	"github.com/yobert/undb"
 	"net/http"
@@ -19,8 +20,10 @@ func send_test(db *undb.Store, i int) {
 
 }
 
+var db *undb.Store
+
 func main() {
-	db := schema_init()
+	db = schema_init()
 
 	go func() {
 		i := 0
@@ -68,10 +71,31 @@ func main() {
 	pk.Include(css)
 
 	pk.BaseURL("/")
-	pk.Websocket("/ws", db.Websocket())
+	pk.Websocket("/ws", NewWebsocketSession)
 
 	pk.Static("/favicon.ico", "./favicon.ico")
 
 	fmt.Println("serving on :8080")
 	http.ListenAndServe(":8080", nil)
+}
+
+type WebsocketSession struct {
+}
+
+var next_ws_id = 0
+
+func (wsession *WebsocketSession) Authenticate(w http.ResponseWriter, r *http.Request) bool {
+	return true
+}
+
+func (wsession *WebsocketSession) Handle(conn *websocket.Conn) {
+	next_ws_id++
+	ws_id := fmt.Sprintf("ws-%d", next_ws_id)
+
+	db.Websocket(conn, ws_id)
+}
+
+func NewWebsocketSession() pkunk.WebsocketHandler {
+	wsession := WebsocketSession{}
+	return &wsession
 }
