@@ -9,16 +9,16 @@ var Item = React.createClass({
 	store: store,
 
 	itemTitle: function(event) {
-		var todo = this.grab('tododb.todos.' + this.props.Name);
+		var todo = this.grab('tododb.todos.' + this.props.Id);
 		todo.Merge({Title: event.target.value});
 	},
 	itemDone: function(event) {
-		var todo = this.grab('tododb.todos.' + this.props.Name);
+		var todo = this.grab('tododb.todos.' + this.props.Id);
 		todo.Merge({Done: event.target.checked});
 	},
 
 	render: function() {
-		var todo = this.grab('tododb.todos.' + this.props.Name);
+		var todo = this.grab('tododb.todos.' + this.props.Id);
 
 		return (
 			<table className="formtable">

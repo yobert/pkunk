@@ -48,9 +48,9 @@ var List = React.createClass({
 				cls += " list_item_done";
 
 			list.push(
-				<div className="touch" key={s.Name}>
+				<div className="touch" key={s.Id}>
 					<span className={cls} onClick={function(){
-						data.edit(s, Item({Name: s.Name}));
+						data.edit(s, Item({Id: s.Id}));
 					}}>
 						{v.Title ? '"' + v.Title + '"' : '(No title)' }
 					</span>
@@ -71,7 +71,7 @@ var List = React.createClass({
 						if(err)
 							throw(err);
 
-						data.edit(s, Item({Name: s.Name}));
+						data.edit(s, Item({Id: s.Id}));
 					}} />
 
 					<input type="button" value="Delete Done" onClick={function() {
