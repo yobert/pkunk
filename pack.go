@@ -29,6 +29,14 @@ type Pack struct {
 	pk *Env
 }
 
+func (pk *Env) NewPackOrDie(title string, paths ...string) *Pack {
+	p, err := pk.NewPack(title, paths...)
+	if err != nil {
+		panic(err)
+	}
+	return p
+}
+
 func (pk *Env) NewPack(title string, paths ...string) (*Pack, error) {
 	p := Pack{}
 
