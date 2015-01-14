@@ -4,9 +4,10 @@
 	"version":"0.0.1",
 	"dependencies":{
 		"es6-promise":"*",
-		"react":"0.11.1",
+		"react":"~0.12",
 		"react-router-component":"*",
-		"jsx-loader":"*"
+		"jsx-loader":"*",
+		"webpack":"*"
 	}
 }
 
