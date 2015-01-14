@@ -7,6 +7,8 @@ import (
 	"net/http"
 	//	"os"
 	"strings"
+
+	"html/template"
 )
 
 type Env struct {
@@ -19,7 +21,12 @@ type Env struct {
 	CachePath string
 
 	resourcePaths []string
+
+	// hack for the moment to stick some stuff in the head section
+	Head template.HTML
 }
+
+type HandlerFunc func(http.ResponseWriter, *http.Request)
 
 //type JsonHandlerFunc func(w http.ResponseWriter, r *http.Request)
 
@@ -43,7 +50,7 @@ func (pk *Env) Static(pattern string, path string) {
 	if strings.HasSuffix(pattern, "/") {
 		pk.ServeMux.Handle(pattern, http.StripPrefix(pattern, http.FileServer(http.Dir(path))))
 	} else {
-		http.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
+		pk.ServeMux.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
 			http.ServeFile(w, r, path)
 		})
 	}

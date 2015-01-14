@@ -19,7 +19,7 @@ func main() {
 	pk.Resources("./js/", "./css/", "../../js/")
 
 	base, err := pk.NewPack("base",
-		"pkunk/bootstrap.js",
+		"bootstrap.js",
 		"main.js",
 		"home.js",
 		"test.js",
@@ -46,5 +46,5 @@ func main() {
 	singleFile("/favicon.ico", "./favicon.ico")
 
 	fmt.Println("serving on :8080")
-	http.ListenAndServe(":8080", nil)
+	fmt.Println(http.ListenAndServe(":8080", nil))
 }

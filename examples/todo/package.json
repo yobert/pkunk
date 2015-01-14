@@ -1,0 +1,13 @@
+{
+	"name":"todopkunkexample",
+	"private":true,
+	"version":"0.0.1",
+	"dependencies":{
+		"es6-promise":"*",
+		"react":"~0.12",
+		"react-router-component":"*",
+		"jsx-loader":"*",
+		"webpack":"*"
+	}
+}
+

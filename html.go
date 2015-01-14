@@ -10,6 +10,7 @@ var pageSource = `<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="UTF-8">
+		{{.Head}}
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">{{range .CSS}}
 		<link rel="stylesheet" href="{{.}}"></link>{{end}}{{range .JS}}
 		<script src="{{.}}"></script>{{end}}
@@ -39,9 +40,11 @@ func (pk *Env) Render(w http.ResponseWriter, r *http.Request, prerender template
 		Data      interface{}
 		Onload    template.JS
 		Prerender template.HTML
+		Head      template.HTML
 	}
 
 	page.Data = nil
+	page.Head = pk.Head
 
 	for _, pack := range pk.Packs {
 		if pack.Type == PACK_CSS {
