@@ -20,6 +20,7 @@ func main() {
 
 	base, err := pk.NewPack("base",
 		"pkunk/bootstrap.js",
+		"main.js",
 		"home.js",
 		"test.js",
 		"layout.js",
@@ -38,7 +39,7 @@ func main() {
 	pk.Include(base)
 	pk.Include(css)
 
-	pk.JsonURL("/", nil)
+	pk.BaseURL("/")
 
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./images/"))))
 	singleFile("/robots.txt", "./robots.txt")

@@ -65,7 +65,7 @@ var error = React.createClass({
 	}
 });
 
-var notfound = router.NotFound;
+var NotFound = router.NotFound;
 
 var app = React.createClass({
 	render: function() {
@@ -74,7 +74,7 @@ var app = React.createClass({
 				<Location path="/" handler={home} />
 				<Location path="/test/:crap" handler={test} />
 				<Location path="/todos" handler={todos} />
-				<notfound handler={error} />
+				<NotFound handler={error} />
 			</Locations>
 		)
 	}
