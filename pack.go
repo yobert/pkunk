@@ -68,7 +68,8 @@ func (p *Pack) Repack() error {
 			break
 		}
 		if path == "" {
-			return errors.New("Could not find \"" + rawpath + "\" in Resources path list")
+			pathlist := fmt.Sprintf("%q", p.pk.resourcePaths)
+			return errors.New("Could not find \"" + rawpath + "\" in Resources path list: " + pathlist)
 		}
 
 		var pt packType
