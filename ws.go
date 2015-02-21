@@ -2,7 +2,9 @@ package pkunk
 
 import (
 	"github.com/gorilla/websocket"
+	"log"
 	"net/http"
+	"time"
 )
 
 var ws_upgrader = websocket.Upgrader{
@@ -15,7 +17,7 @@ type WebsocketHandler interface {
 	Handle(*websocket.Conn)
 }
 
-func (pk *Env) Websocket(url string, handlerbuilder func() WebsocketHandler) {
+func (pk *Env) Websocket(url string, handlerbuilder func() WebsocketHandler, ping, slop time.Duration) {
 	pk.ServeMux.HandleFunc(url, func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "GET" {
 			http.Error(w, "Method not allowed", 405)
@@ -44,6 +46,28 @@ func (pk *Env) Websocket(url string, handlerbuilder func() WebsocketHandler) {
 		}
 
 		defer ws.Close()
+
+		err = ws.SetReadDeadline(time.Now().Add(ping + slop))
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		go func() {
+			c := time.Tick(ping)
+			for _ = range c {
+				if err := ws.WriteControl(websocket.PingMessage, nil, time.Now().Add(slop)); err != nil {
+					log.Println(err)
+					ws.Close()
+					break
+				}
+			}
+		}()
+
+		ws.SetPongHandler(func(string) error {
+			return ws.SetReadDeadline(time.Now().Add(ping + slop))
+		})
+
 		handler.Handle(ws)
 	})
 }
