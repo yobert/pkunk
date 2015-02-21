@@ -15,6 +15,7 @@ var ws_upgrader = websocket.Upgrader{
 type WebsocketHandler interface {
 	Authenticate(http.ResponseWriter, *http.Request) bool
 	Handle(*websocket.Conn)
+	Pong()
 }
 
 func (pk *Env) Websocket(url string, handlerbuilder func() WebsocketHandler, ping, slop time.Duration) {
@@ -65,6 +66,7 @@ func (pk *Env) Websocket(url string, handlerbuilder func() WebsocketHandler, pin
 		}()
 
 		ws.SetPongHandler(func(string) error {
+			handler.Pong()
 			return ws.SetReadDeadline(time.Now().Add(ping + slop))
 		})
 
