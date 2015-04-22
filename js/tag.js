@@ -1,5 +1,4 @@
 var tools = require('./tools');
-var append = require('./append');
 
 function tag()
 {
@@ -67,6 +66,31 @@ function tag()
 	append(e, v);
 
 	return e;
+}
+
+function append(e, v) // copy of append.js so we dont have a circular require
+{
+	if(v === undefined || tools.is_null(v))
+		return;
+
+	if(!e || !e.appendChild)
+		throw 'append() called on non-dom element: '+e;
+
+	if(typeof v == 'number')
+		e.appendChild(tools.text(v.toString()));
+	else if(tools.is_string(v))
+		e.appendChild(tools.text(v));
+	else if(tools.is_dom(v))
+		e.appendChild(v);
+	else if(tools.is_array(v))
+	{
+		for(var x in v)
+			append(e, v[x]);
+	}
+	else if(tools.is_obj(v)) // must be a hash, since we already checked for is_dom and is_array
+		e.appendChild(tag(v));
+
+	return;
 }
 
 module.exports = tag;
