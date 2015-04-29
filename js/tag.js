@@ -55,11 +55,11 @@ function tag()
 		if(typeof data[x] == 'function' && x.substr(0, 2) == 'on')
 			tools.listener_add(e, x.substr(2, x.length - 2), data[x]);
 		else if(x == 'class')
-			e.className = data[x]; // for IE6
-		else if(x == 'style' && ua_is_ie)
+			e.className = data[x];
+		else if(x == 'style')
 			e.style.cssText = data[x];
 		else if(data[x] !== undefined)
-			e.setAttribute(x, data[x], 0); // TODO fix for IE <9
+			e.setAttribute(x, data[x], 0);
 	}
 
 	append(e, v);
