@@ -2,16 +2,15 @@
   "name": "pkunk",
   "description": "A set of javascript tools",
   "author": "yobert@gmail.com",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "main": "main.js",
-  "dependencies": {
-  },
-  "repository":{
+  "dependencies": {},
+  "repository": {
     "type": "git",
-	 "url": "https://github.com/yobert/pkunk"
+    "url": "https://github.com/yobert/pkunk"
   },
-  "bugs":{
-	 "url": "https://github.com/yobert/pkunk/issues"
-	},
-	"license":"MIT"
+  "bugs": {
+    "url": "https://github.com/yobert/pkunk/issues"
+  },
+  "license": "MIT"
 }
