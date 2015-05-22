@@ -1,0 +1,12 @@
+{
+	"name":"pkunk-uitest",
+	"private":true,
+	"version":"0.0.1",
+	"dependencies":{
+		"webpack":"*",
+		"pkunk-jsx-loader":"*",
+		"source-map-loader":"*",
+		"esmangle":"*"
+	}
+}
+

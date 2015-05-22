@@ -518,13 +518,8 @@ function element_xy(e) {
 	return [x, y];
 }
 function element_size(e) {
-	while(e.parentNode && !(e.offsetHeight || e.clientHeight))
-		e = e.parentNode;
-
-	var x = e.offsetWidth || e.clientWidth;
-	var y = e.offsetHeight || e.clientHeight;
-
-	return [x, y];
+	var rect = e.getBoundingClientRect();
+	return [rect.width, rect.height];
 }
 
 // return true if element a contains element b

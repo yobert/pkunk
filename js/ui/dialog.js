@@ -2,41 +2,92 @@ var tools = require('../tools');
 var tag = require('../tag');
 var append = require('../append');
 
-var _dialog_id_seq = 0;
-
 function Dialog(title, body, buttons, options) {
 	if(!options)
 		options = {};
 
-	var titlediv = tag('div', {'class':'dialog_title'}, title);
+	var inner = tag('div', {'class':'dialog_inner'});
 
-	var bodydiv = tag('div', {'class':'dialog_body'}, body);
+	if(title) {
+		this.dom_title = tag('div', {'class':'dialog_title'}, title);
+		append(inner, this.dom_title);
 
-	var div = tag('div', {'class':'dialog dialog_active'});
+		// disable weird text selecty-ness
+		this.dom_title.onmousedown = function() { return false; };
+	}
+
+	if(body) {
+		this.dom_body = tag('div', {'class':'dialog_body'}, body);
+		append(inner, this.dom_body);
+	}
+
+	if(buttons && tools.is_array(buttons) && buttons.length) {
+		this.dom_buttons = this.buildButtons(buttons);
+		append(inner, this.dom_buttons);
+	}
+
+	var div = tag('div', {'class':'dialog dialog_active'}, inner);
 	div.style.position = 'fixed';
 
-	if(title)
-		div.appendChild(titlediv);
-
-	if(body)
-		div.appendChild(bodydiv);
-
-	this.id = 'dialog_' + (_dialog_id_seq++);
 	this.dom = div;
 	this.onclose = options.onclose;
+	var that = this;
 
-	// disable weird text selecty-ness
-	titlediv.onmousedown = function() { return false; };
-
-	if(buttons && tools.is_array(buttons) && buttons.length)
-		bodydiv.appendChild(this.buildButtons(buttons));
+	if(options.modal) {
+		this.dom_modal = _modal();
+		this.modal_click_cb = function() {
+			that.close();
+		};
+		tools.listener_add(this.dom_modal, 'click', this.modal_click_cb);
+		document.body.appendChild(this.dom_modal);
+	}
 
 	document.body.appendChild(div);
 
+	this.keydown_cb = function(e) {
+		if(tools.get_key(e) == 27) {
+			tools.event_stop(e);
+			that.close();
+		}
+
+		return true;
+	};
+
+	tools.listener_add(window, 'keydown', this.keydown_cb);
+
+	this.topLeft();
 	this.fitToWindow();
 	this.center();
 
 	return;
+}
+
+function _modal() {
+
+	var body = document.body,
+		html = document.documentElement;
+
+	var height = Math.max(
+		body.scrollHeight, body.offsetHeight,
+		html.clientHeight, html.scrollHeight,
+		html.offsetHeight);
+
+	var div = tag('div', {'class':'dialog_modal'});
+
+	div.style.position = 'absolute';
+	div.style.top = 0;
+	div.style.left = 0;
+	div.style.right = 0;
+	div.style.height = height + 'px';
+
+	document.body.style.overflow = 'hidden';
+
+	return div;
+}
+function _modal_close(div) {
+	div.parentNode.removeChild(div);
+
+	document.body.style.overflow = 'auto';
 }
 
 Dialog.prototype.buildButtons = function(buttons) {
@@ -73,6 +124,39 @@ Dialog.prototype.buildButtons = function(buttons) {
 }
 
 Dialog.prototype.fitToWindow = function() {
+	if(!this.dom_body)
+		return;
+
+	this.dom.style.left = '0px';
+	this.dom.style.top = '0px';
+
+	var window_xy = tools.window_size();
+
+	var ds, bs, spare;
+
+	ds = tools.element_size(this.dom);
+	bs = tools.element_size(this.dom_body);
+	spare = [
+		ds[0] - bs[0],
+		ds[1] - bs[1]
+	];
+
+	if(ds[0] > window_xy[0]) {
+		this.dom_body.style.width = (window_xy[0] - spare[0])+'px';
+		this.dom_body.style.overflowX = 'scroll';
+	}
+
+	if(ds[1] > window_xy[1]) {
+		this.dom_body.style.height = (window_xy[1] - spare[1])+'px';
+		this.dom_body.style.overflowY = 'scroll';
+	}
+
+	return;
+}
+
+Dialog.prototype.topLeft = function() {
+	this.dom.style.left = '0px';
+	this.dom.style.top = '0px';
 }
 
 Dialog.prototype.center = function() {
@@ -95,6 +179,20 @@ Dialog.prototype.center = function() {
 Dialog.prototype.close = function() {
 	if(this.onclose && !this.onclose())
 		return;
+
+	if(this.keydown_cb) {
+		tools.listener_remove(window, 'keydown', this.keydown_cb);
+		delete this.keydown_cb;
+	}
+
+	if(this.dom_modal) {
+		if(this.modal_click_cb) {
+			tools.listener_remove(this.dom_modal, 'click', this.modal_click_cb)
+			delete this.modal_click_cb;
+		}
+		_modal_close(this.dom_modal);
+		delete this.dom_modal;
+	}
 
 	if(!this.dom)
 		return;

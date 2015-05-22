@@ -1,0 +1,51 @@
+html, body {
+	margin: 0px;
+	padding: 0px;
+
+	color: black;
+	background-color: #ccc;
+}
+
+.menu {
+	margin: 2em;
+}
+.menu a {
+	margin-left: 0.5em;
+	text-decoration: none;
+	color: gray;
+}
+.menu a.current {
+	text-decoration: underline;
+}
+
+.blue { color: blue; }
+
+
+
+.dialog_inner {
+	background-color: #fff;
+	border-radius: 3px;
+	box-shadow: 2px 2px 5px black;
+	border: 1px solid black;
+}
+
+.dialog_title, .dialog_buttons {
+	padding: 0.5em;
+
+}
+
+.dialog_title {
+	border-bottom: 1px solid #eee;
+}
+.dialog_body {
+	padding: 0.5em;
+	box-sizing: border-box;
+}
+.dialog_buttons {
+	border-top: 1px solid #eee;
+}
+.dialog_modal {
+	opacity: 0.8;
+	background-color: #cfc;
+}
+
