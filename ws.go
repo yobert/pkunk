@@ -48,27 +48,29 @@ func (pk *Env) Websocket(url string, handlerbuilder func() WebsocketHandler, pin
 
 		defer ws.Close()
 
-		err = ws.SetReadDeadline(time.Now().Add(ping + slop))
-		if err != nil {
-			log.Println(err)
-			return
-		}
-
-		go func() {
-			c := time.Tick(ping)
-			for _ = range c {
-				if err := ws.WriteControl(websocket.PingMessage, nil, time.Now().Add(slop)); err != nil {
-					log.Println(err)
-					ws.Close()
-					break
-				}
+		if ping != 0 {
+			err = ws.SetReadDeadline(time.Now().Add(ping + slop))
+			if err != nil {
+				log.Println(err)
+				return
 			}
-		}()
 
-		ws.SetPongHandler(func(string) error {
-			handler.Pong()
-			return ws.SetReadDeadline(time.Now().Add(ping + slop))
-		})
+			go func() {
+				c := time.Tick(ping)
+				for _ = range c {
+					if err := ws.WriteControl(websocket.PingMessage, nil, time.Now().Add(slop)); err != nil {
+						log.Println(err)
+						ws.Close()
+						break
+					}
+				}
+			}()
+
+			ws.SetPongHandler(func(string) error {
+				handler.Pong()
+				return ws.SetReadDeadline(time.Now().Add(ping + slop))
+			})
+		}
 
 		handler.Handle(ws)
 	})
