@@ -16,6 +16,7 @@ type Env struct {
 	ServeMux *http.ServeMux
 
 	Packs []*Pack
+	DontRepack bool
 
 	CacheUrl  string
 	CachePath string
@@ -71,6 +72,9 @@ func (pk *Env) Resources(resources ...string) {
 
 func (pk *Env) ProcessPacks() {
 	for _, pack := range pk.Packs {
+		if pk.DontRepack && pack.PackedPath != "" {
+			continue
+		}
 		err := pack.Repack()
 		if err != nil {
 			panic(err)
