@@ -20,6 +20,7 @@ var pageSource = `<!DOCTYPE html>
 	</head>
 	<body onload="{{.Onload}}">
 		{{.Prerender}}
+		{{.Body}}
 	</body>
 </html>
 `
@@ -41,10 +42,12 @@ func (pk *Env) Render(w http.ResponseWriter, r *http.Request, prerender template
 		Onload    template.JS
 		Prerender template.HTML
 		Head      template.HTML
+		Body      template.HTML
 	}
 
 	page.Data = nil
 	page.Head = pk.Head
+	page.Body = pk.Body
 
 	for _, pack := range pk.Packs {
 		if pack.Type == PACK_CSS {

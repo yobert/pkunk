@@ -25,6 +25,7 @@ type Env struct {
 
 	// hack for the moment to stick some stuff in the head section
 	Head template.HTML
+	Body template.HTML
 }
 
 type HandlerFunc func(http.ResponseWriter, *http.Request)
