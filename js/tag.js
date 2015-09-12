@@ -52,9 +52,19 @@ function tag()
 	// wish i could do this without looping twice =)
 	for(x in data)
 	{
-		if(typeof data[x] == 'function' && x.substr(0, 2) == 'on')
-			tools.listener_add(e, x.substr(2, x.length - 2), data[x]);
-		else if(x == 'class')
+		if(typeof data[x] == 'function' && x.substr(0, 2) == 'on') {
+			if(tag == 'a' && x == 'onclick') {
+				// HACK to avoid having to always return false / event.stop_prop for links
+				tools.listener_add(e, x.substr(2, x.length - 2), function(e) {
+					tools.event_stop(e);
+					data[x](e);
+					return false;
+				});
+			} else {
+				// for everything else don't muck with it
+				tools.listener_add(e, x.substr(2, x.length - 2), data[x]);
+			}
+		} else if(x == 'class')
 			e.className = data[x];
 		else if(x == 'style')
 			e.style.cssText = data[x];
