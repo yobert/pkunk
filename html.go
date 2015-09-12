@@ -15,7 +15,7 @@ var pageSource = `<!DOCTYPE html>
 		<link rel="stylesheet" href="{{.}}"></link>{{end}}{{range .JS}}
 		<script src="{{.}}"></script>{{end}}
 		<script>
-			var bootstrap_data = {{.Data}};
+			var bootstrap_data = {{.BootstrapData}};
 		</script>
 	</head>
 	<body onload="{{.Onload}}">
@@ -34,18 +34,18 @@ func init() {
 	pageTemplate = t
 }
 
-func (pk *Env) Render(w http.ResponseWriter, r *http.Request, prerender template.HTML) {
+func (pk *Env) Render(w http.ResponseWriter, r *http.Request, data interface{}, prerender template.HTML) {
 	var page struct {
-		JS        []string
-		CSS       []string
-		Data      interface{}
-		Onload    template.JS
-		Prerender template.HTML
-		Head      template.HTML
-		Body      template.HTML
+		JS            []string
+		CSS           []string
+		BootstrapData interface{}
+		Onload        template.JS
+		Prerender     template.HTML
+		Head          template.HTML
+		Body          template.HTML
 	}
 
-	page.Data = nil
+	page.BootstrapData = data
 	page.Head = pk.Head
 	page.Body = pk.Body
 
@@ -58,7 +58,7 @@ func (pk *Env) Render(w http.ResponseWriter, r *http.Request, prerender template
 	}
 
 	if prerender == "" {
-		page.Onload = "main();"
+		page.Onload = "main(bootstrap_data);"
 	} else {
 		page.Prerender = prerender
 	}

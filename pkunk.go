@@ -11,11 +11,14 @@ import (
 	"html/template"
 )
 
+type HandlerFunc func(http.ResponseWriter, *http.Request)
+type PreHandlerFunc func(*http.Request) interface{}
+
 type Env struct {
 	//	RootHandler func(http.ResponseWriter, *http.Request)
 	ServeMux *http.ServeMux
 
-	Packs []*Pack
+	Packs      []*Pack
 	DontRepack bool
 
 	CacheUrl  string
@@ -26,9 +29,9 @@ type Env struct {
 	// hack for the moment to stick some stuff in the head section
 	Head template.HTML
 	Body template.HTML
-}
 
-type HandlerFunc func(http.ResponseWriter, *http.Request)
+	PreHandler PreHandlerFunc
+}
 
 //type JsonHandlerFunc func(w http.ResponseWriter, r *http.Request)
 
@@ -88,6 +91,12 @@ func (pk *Env) BaseURL(url string) { //, handler JsonHandlerFunc) {
 	pk.ServeMux.HandleFunc(url, func(w http.ResponseWriter, r *http.Request) {
 		log.Println(r.URL.Path)
 
+		var data interface{}
+
+		if pk.PreHandler != nil {
+			data = pk.PreHandler(r)
+		}
+
 		// for now, always re-analyze to see if the contents of the javscript
 		// changed and need to be repacked
 		pk.ProcessPacks()
@@ -103,6 +112,6 @@ func (pk *Env) BaseURL(url string) { //, handler JsonHandlerFunc) {
 		}
 		pk.Render(w, r, html)*/
 
-		pk.Render(w, r, "")
+		pk.Render(w, r, data, "")
 	})
 }
